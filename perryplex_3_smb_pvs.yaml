@@ -128,29 +128,3 @@ spec:
     nodeStageSecretRef:
       name: perryplex-smb-creds
       namespace: perryplex
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: pv-smb-perryplex-downloading
-  namespace: perryplex
-spec:
-  storageClassName: ""
-  capacity:
-    storage: 50Gi
-  accessModes:
-    - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
-  mountOptions:
-    - dir_mode=0777
-    - file_mode=0777
-    - vers=3.0
-  csi:
-    driver: smb.csi.k8s.io
-    readOnly: false
-    volumeHandle: perryplex-downloads
-    volumeAttributes:
-      source: //perrynas/Downloading
-    nodeStageSecretRef:
-      name: perryplex-smb-creds
-      namespace: perryplex

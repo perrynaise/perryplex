@@ -45,8 +45,6 @@ spec:
           mountPath: /config
         - name: readarr-data-downloads
           mountPath: /downloads
-        - name: readarr-data-downloading
-          mountPath: /downloading
       volumes:
       - name: readarr-config
         persistentVolumeClaim:
@@ -54,9 +52,6 @@ spec:
       - name: readarr-data-downloads
         persistentVolumeClaim:
           claimName: pvc-smb-perryplex-downloads
-      - name: readarr-data-downloading
-        persistentVolumeClaim:
-          claimName: pvc-smb-perryplex-downloading
 ---
 apiVersion: v1
 kind: Service

@@ -45,8 +45,6 @@ spec:
           mountPath: /config
         - name: sabnzbd-data-downloads
           mountPath: /downloads
-        - name: sabnzbd-data-downloading
-          mountPath: /downloading
       volumes:
       - name: sabnzbd-config
         persistentVolumeClaim:
@@ -54,9 +52,6 @@ spec:
       - name: sabnzbd-data-downloads
         persistentVolumeClaim:
           claimName: pvc-smb-perryplex-downloads
-      - name: sabnzbd-data-downloading
-        persistentVolumeClaim:
-          claimName: pvc-smb-perryplex-downloading
 ---
 apiVersion: v1
 kind: Service

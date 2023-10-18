@@ -47,8 +47,6 @@ spec:
           mountPath: /config
         - name: deluge-data-downloads
           mountPath: /downloads
-        - name: deluge-data-downloading
-          mountPath: /downloading
       volumes:
       - name: deluge-config
         persistentVolumeClaim:
@@ -56,9 +54,6 @@ spec:
       - name: deluge-data-downloads
         persistentVolumeClaim:
           claimName: pvc-smb-perryplex-downloads
-      - name: deluge-data-downloading
-        persistentVolumeClaim:
-          claimName: pvc-smb-perryplex-downloading
 ---
 apiVersion: v1
 kind: Service
