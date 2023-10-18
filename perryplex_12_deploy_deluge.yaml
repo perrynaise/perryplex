@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pvc-nfs-perryplex-sonarr-config
+  name: pvc-nfs-perryplex-deluge-config
   namespace: perryplex
   annotations:
 spec:
@@ -16,21 +16,21 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sonarr
+  name: deluge
   namespace: perryplex
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: sonarr
+      app: deluge
   template:
     metadata:
       labels:
-        app: sonarr
+        app: deluge
     spec:
       containers:
-      - name: sonarr
-        image: linuxserver/sonarr:latest
+      - name: deluge
+        image: linuxserver/deluge:latest
         ports:
         - containerPort: 8989
         env:
@@ -40,46 +40,43 @@ spec:
           value: '1000'
         - name: TZ
           value: 'Australia/Brisbane'
+        - name: DELUGE_LOGLEVEL
+          value: 'error'
         volumeMounts:
-        - name: sonarr-config
+        - name: deluge-config
           mountPath: /config
-        - name: sonarr-data-tvshows
-          mountPath: /tv
-        - name: sonarr-data-tvshows3
-          mountPath: /tv3
-        - name: sonarr-data-downloads
+        - name: deluge-data-downloads
           mountPath: /downloads
+        - name: deluge-data-downloading
+          mountPath: /downloading
       volumes:
-      - name: sonarr-config
+      - name: deluge-config
         persistentVolumeClaim:
-          claimName: pvc-nfs-perryplex-sonarr-config
-      - name: sonarr-data-tvshows
-        persistentVolumeClaim:
-          claimName: pvc-smb-perryplex-tvshows
-      - name: sonarr-data-tvshows3
-        persistentVolumeClaim:
-          claimName: pvc-smb-perryplex-tvshows3
-      - name: sonarr-data-downloads
+          claimName: pvc-nfs-perryplex-deluge-config
+      - name: deluge-data-downloads
         persistentVolumeClaim:
           claimName: pvc-smb-perryplex-downloads
+      - name: deluge-data-downloading
+        persistentVolumeClaim:
+          claimName: pvc-smb-perryplex-downloading
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: sonarr
+  name: deluge
   namespace: perryplex
 spec:
   selector:
-    app: sonarr
+    app: deluge
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8989
+      targetPort: 8080
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: perryplex-sonarr-ingress
+  name: perryplex-deluge-ingress
   namespace: perryplex
   annotations:
     cert-manager.io/cluster-issuer: selfsigned-issuer
@@ -88,16 +85,16 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - sonarr.perryinc2.net
-    secretName: tls-sonarr.perryinc2.net-sonarr
+    - deluge.perryinc2.net
+    secretName: tls-deluge.perryinc2.net-deluge
   rules:
-  - host: sonarr.perryinc2.net
+  - host: deluge.perryinc2.net
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: sonarr
+            name: deluge
             port:
               number: 80

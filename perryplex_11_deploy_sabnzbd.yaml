@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pvc-nfs-perryplex-sonarr-config
+  name: pvc-nfs-perryplex-readarr-config
   namespace: perryplex
   annotations:
 spec:
@@ -16,23 +16,23 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sonarr
+  name: readarr
   namespace: perryplex
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: sonarr
+      app: readarr
   template:
     metadata:
       labels:
-        app: sonarr
+        app: readarr
     spec:
       containers:
-      - name: sonarr
-        image: linuxserver/sonarr:latest
+      - name: readarr
+        image: linuxserver/readarr:nightly
         ports:
-        - containerPort: 8989
+        - containerPort: 8787
         env:
         - name: PUID
           value: '1000'
@@ -41,45 +41,40 @@ spec:
         - name: TZ
           value: 'Australia/Brisbane'
         volumeMounts:
-        - name: sonarr-config
+        - name: readarr-config
           mountPath: /config
-        - name: sonarr-data-tvshows
-          mountPath: /tv
-        - name: sonarr-data-tvshows3
-          mountPath: /tv3
-        - name: sonarr-data-downloads
+        - name: readarr-data-downloads
           mountPath: /downloads
+        - name: readarr-data-downloading
+          mountPath: /downloading
       volumes:
-      - name: sonarr-config
+      - name: readarr-config
         persistentVolumeClaim:
-          claimName: pvc-nfs-perryplex-sonarr-config
-      - name: sonarr-data-tvshows
-        persistentVolumeClaim:
-          claimName: pvc-smb-perryplex-tvshows
-      - name: sonarr-data-tvshows3
-        persistentVolumeClaim:
-          claimName: pvc-smb-perryplex-tvshows3
-      - name: sonarr-data-downloads
+          claimName: pvc-nfs-perryplex-readarr-config
+      - name: readarr-data-downloads
         persistentVolumeClaim:
           claimName: pvc-smb-perryplex-downloads
+      - name: readarr-data-downloading
+        persistentVolumeClaim:
+          claimName: pvc-smb-perryplex-downloading
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: sonarr
+  name: readarr
   namespace: perryplex
 spec:
   selector:
-    app: sonarr
+    app: readarr
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8989
+      targetPort: 8080
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: perryplex-sonarr-ingress
+  name: perryplex-readarr-ingress
   namespace: perryplex
   annotations:
     cert-manager.io/cluster-issuer: selfsigned-issuer
@@ -88,16 +83,16 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - sonarr.perryinc2.net
-    secretName: tls-sonarr.perryinc2.net-sonarr
+    - readarr.perryinc2.net
+    secretName: tls-readarr.perryinc2.net-readarr
   rules:
-  - host: sonarr.perryinc2.net
+  - host: readarr.perryinc2.net
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: sonarr
+            name: readarr
             port:
               number: 80
