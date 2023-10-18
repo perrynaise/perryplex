@@ -1,0 +1,84 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-smb-perryplex-tvshows
+  namespace: perryplex
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  volumeName: pv-smb-perryplex-tvshows
+  storageClassName: ""
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-smb-perryplex-tvshows3
+  namespace: perryplex
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  volumeName: pv-smb-perryplex-tvshows3
+  storageClassName: ""
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-smb-perryplex-movies
+  namespace: perryplex
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  volumeName: pv-smb-perryplex-movies
+  storageClassName: ""
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-smb-perryplex-ebooks
+  namespace: perryplex
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  volumeName: pv-smb-perryplex-ebooks
+  storageClassName: ""
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-smb-perryplex-downloads
+  namespace: perryplex
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  volumeName: pv-smb-perryplex-downloads
+  storageClassName: ""
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-smb-perryplex-downloading
+  namespace: perryplex
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  volumeName: pv-smb-perryplex-downloading
+  storageClassName: ""

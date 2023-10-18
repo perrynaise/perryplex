@@ -1,0 +1,156 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-smb-perryplex-tvshows
+  namespace: perryplex
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - vers=3.0
+  csi:
+    driver: smb.csi.k8s.io
+    readOnly: false
+    volumeHandle: perryplex-tvshows
+    volumeAttributes:
+      source: //perrynas/Media/TVShows
+    nodeStageSecretRef:
+      name: perryplex-smb-creds
+      namespace: perryplex
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-smb-perryplex-tvshows3
+  namespace: perryplex
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - vers=3.0
+  csi:
+    driver: smb.csi.k8s.io
+    readOnly: false
+    volumeHandle: perryplex-tvshows3
+    volumeAttributes:
+      source: //perrynas/PerryData12TB/TVShows3
+    nodeStageSecretRef:
+      name: perryplex-smb-creds
+      namespace: perryplex
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-smb-perryplex-movies
+  namespace: perryplex
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - vers=3.0
+  csi:
+    driver: smb.csi.k8s.io
+    readOnly: false
+    volumeHandle: perryplex-movies
+    volumeAttributes:
+      source: //perrynas/Media/Movies
+    nodeStageSecretRef:
+      name: perryplex-smb-creds
+      namespace: perryplex
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-smb-perryplex-ebooks
+  namespace: perryplex
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - vers=3.0
+  csi:
+    driver: smb.csi.k8s.io
+    readOnly: false
+    volumeHandle: perryplex-ebooks
+    volumeAttributes:
+      source: //perrynas/Media/eBooks
+    nodeStageSecretRef:
+      name: perryplex-smb-creds
+      namespace: perryplex
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-smb-perryplex-downloads
+  namespace: perryplex
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - vers=3.0
+  csi:
+    driver: smb.csi.k8s.io
+    readOnly: false
+    volumeHandle: perryplex-downloads
+    volumeAttributes:
+      source: //perrynas/Downloads
+    nodeStageSecretRef:
+      name: perryplex-smb-creds
+      namespace: perryplex
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-smb-perryplex-downloading
+  namespace: perryplex
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - vers=3.0
+  csi:
+    driver: smb.csi.k8s.io
+    readOnly: false
+    volumeHandle: perryplex-downloads
+    volumeAttributes:
+      source: //perrynas/Downloading
+    nodeStageSecretRef:
+      name: perryplex-smb-creds
+      namespace: perryplex

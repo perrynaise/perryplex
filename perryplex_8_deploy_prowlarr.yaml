@@ -1,0 +1,88 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-nfs-perryplex-prowlarr-config
+  namespace: perryplex
+  annotations:
+spec:
+  storageClassName: nfs-kubeconfigs
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prowlarr
+  namespace: perryplex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prowlarr
+  template:
+    metadata:
+      labels:
+        app: prowlarr
+    spec:
+      containers:
+      - name: prowlarr
+        image: linuxserver/prowlarr:nightly
+        ports:
+        - containerPort: 8989
+        env:
+        - name: PUID
+          value: '1000'
+        - name: PGID
+          value: '1000'
+        - name: TZ
+          value: 'Australia/Brisbane'
+        volumeMounts:
+        - name: prowlarr-config
+          mountPath: /config
+      volumes:
+      - name: prowlarr-config
+        persistentVolumeClaim:
+          claimName: pvc-nfs-perryplex-prowlarr-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prowlarr
+  namespace: perryplex
+spec:
+  selector:
+    app: prowlarr
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9696
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: perryplex-prowlarr-ingress
+  namespace: perryplex
+  annotations:
+    cert-manager.io/cluster-issuer: selfsigned-issuer
+    nginx.org/redirect-to-https: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - prowlarr.perryinc2.net
+    secretName: tls-prowlarr.perryinc2.net-prowlarr
+  rules:
+  - host: prowlarr.perryinc2.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prowlarr
+            port:
+              number: 80
