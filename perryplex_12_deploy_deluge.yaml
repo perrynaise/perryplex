@@ -49,11 +49,13 @@ spec:
           mountPath: /downloads
       volumes:
       - name: deluge-config
-        persistentVolumeClaim:
-          claimName: pvc-nfs-perryplex-deluge-config
+        nfs:
+          server: perrynas
+          path: /KubeConfigs/deluge
       - name: deluge-data-downloads
-        persistentVolumeClaim:
-          claimName: pvc-smb-perryplex-downloads
+        nfs:
+          server: perrynas
+          path: /Downloads
 ---
 apiVersion: v1
 kind: Service

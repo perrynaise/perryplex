@@ -1,18 +1,4 @@
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: pvc-nfs-perryplex-readarr-config
-  namespace: perryplex
-  annotations:
-spec:
-  storageClassName: nfs-kubeconfigs
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 10Gi
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -47,11 +33,13 @@ spec:
           mountPath: /downloads
       volumes:
       - name: readarr-config
-        persistentVolumeClaim:
-          claimName: pvc-nfs-perryplex-readarr-config
+        nfs:
+          server: perrynas
+          path: /KubeConfigs/readarr
       - name: readarr-data-downloads
-        persistentVolumeClaim:
-          claimName: pvc-smb-perryplex-downloads
+        nfs:
+          server: perrynas
+          path: /Downloads
 ---
 apiVersion: v1
 kind: Service

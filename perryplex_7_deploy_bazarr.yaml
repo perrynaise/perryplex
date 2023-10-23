@@ -1,18 +1,4 @@
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: pvc-nfs-perryplex-bazarr-config
-  namespace: perryplex
-  annotations:
-spec:
-  storageClassName: nfs-kubeconfigs
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 10Gi
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -45,23 +31,33 @@ spec:
           mountPath: /config
         - name: bazarr-data-tvshows
           mountPath: /tv
+        - name: bazarr-data-tvshows2
+          mountPath: /tv2
         - name: bazarr-data-tvshows3
           mountPath: /tv3
         - name: bazarr-data-movies
           mountPath: /movies
       volumes:
       - name: bazarr-config
-        persistentVolumeClaim:
-          claimName: pvc-nfs-perryplex-bazarr-config
+        nfs:
+          server: perrynas
+          path: /KubeConfigs/bazarr
       - name: bazarr-data-movies
-        persistentVolumeClaim:
-          claimName: pvc-smb-perryplex-movies
+        nfs:
+          server: perrynas
+          path: /Media/Movies
       - name: bazarr-data-tvshows
-        persistentVolumeClaim:
-          claimName: pvc-smb-perryplex-tvshows
+        nfs:
+          server: perrynas
+          path: /Media/TVShows
+      - name: bazarr-data-tvshows2
+        nfs:
+          server: perrynas
+          path: /PerryData12TB/TVShows2
       - name: bazarr-data-tvshows3
-        persistentVolumeClaim:
-          claimName: pvc-smb-perryplex-tvshows3
+        nfs:
+          server: perrynas
+          path: /PerryData12TB/TVShows3
 ---
 apiVersion: v1
 kind: Service

@@ -1,18 +1,4 @@
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: pvc-nfs-perryplex-sonarr-config
-  namespace: perryplex
-  annotations:
-spec:
-  storageClassName: nfs-kubeconfigs
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 10Gi
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -45,23 +31,33 @@ spec:
           mountPath: /config
         - name: sonarr-data-tvshows
           mountPath: /tv
+        - name: sonarr-data-tvshows2
+          mountPath: /tv2
         - name: sonarr-data-tvshows3
           mountPath: /tv3
         - name: sonarr-data-downloads
           mountPath: /downloads
       volumes:
       - name: sonarr-config
-        persistentVolumeClaim:
-          claimName: pvc-nfs-perryplex-sonarr-config
+        nfs:
+          server: perrynas
+          path: /KubeConfigs/sonarr
       - name: sonarr-data-tvshows
-        persistentVolumeClaim:
-          claimName: pvc-smb-perryplex-tvshows
+        nfs:
+          server: perrynas
+          path: /Media/TVShows
+      - name: sonarr-data-tvshows2
+        nfs:
+          server: perrynas
+          path: /Media/TVShows2
       - name: sonarr-data-tvshows3
-        persistentVolumeClaim:
-          claimName: pvc-smb-perryplex-tvshows3
+        nfs:
+          server: perrynas
+          path: /PerryData12TB/TVShows3
       - name: sonarr-data-downloads
-        persistentVolumeClaim:
-          claimName: pvc-smb-perryplex-downloads
+        nfs:
+          server: perrynas
+          path: /Downloads
 ---
 apiVersion: v1
 kind: Service
