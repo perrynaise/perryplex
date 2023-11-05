@@ -32,7 +32,15 @@ spec:
       - name: deluge
         image: linuxserver/deluge:latest
         ports:
-        - containerPort: 8989
+        - containerPort: 8112
+          protocol: TCP
+          name: delugeui
+        - containerPort: 6881
+          protocol: TCP
+          name: delugeintcp
+        - containerPort: 6881
+          protocol: UDP
+          name: delugeinudp
         env:
         - name: PUID
           value: '1000'
@@ -68,7 +76,16 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8080
+      targetPort: 8112
+      name: delugeui
+    - protocol: TCP
+      port: 8661
+      targetPort: 8661
+      name: delugeintcp
+    - protocol: UDP
+      port: 8661
+      targetPort: 8661
+      name: delugeinudp
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

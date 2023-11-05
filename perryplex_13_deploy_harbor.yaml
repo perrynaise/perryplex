@@ -1,0 +1,92 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-nfs-harbor-registry
+  namespace: perryplex
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  volumeName: pv-nfs-harbor-registry
+  storageClassName: "nfs-kubeconfigs"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-harbor-registry
+  namespace: perryplex
+spec:
+  storageClassName: "nfs-kubeconfigs"
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /KubeConfigs/harbor/registry/
+    server: 10.1.1.4
+    readOnly: false
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: perryplex-harbor-ingress
+  namespace: perryplex
+  annotations:
+    cert-manager.io/cluster-issuer: selfsigned-issuer
+    nginx.org/redirect-to-https: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - harbor.perryinc2.net
+    secretName: tls-harbor.perryinc2.net-harbor
+  rules:
+  - host: harbor.perryinc2.net
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: harbor-system-portal
+            port:
+              number: 80
+      - path: /api/
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: harbor-system-core
+            port:
+              number: 80
+      - path: /service/
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: harbor-system-core
+            port:
+              number: 80
+      - path: /v2/
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: harbor-system-core
+            port:
+              number: 80
+      - path: /chartrepo/
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: harbor-system-core
+            port:
+              number: 80
+      - path: /c/
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: harbor-system-core
+            port:
+              number: 80
